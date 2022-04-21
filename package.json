@@ -26,7 +26,8 @@
   "homepage": "https://github.com/pritamworld/w4_3133_nodejs_express_mongodb_template#readme",
   "dependencies": {
     "express": "^4.17.2",
-    "mongoose": "^6.2.0"
+    "mongoose": "^6.2.0",
+    "mqtt": "^4.3.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
