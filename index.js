@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const employeeRouter = require('./routes/EmployeeRoutes.js');
+const userRouter = require('./routes/UserRoutes.js');
 
 const app = express();
 app.use(express.json()); // Make sure it comes back as json
@@ -16,5 +17,7 @@ mongoose.connect('mongodb+srv://datbk:123456789dat@cluster0.punaw.mongodb.net/my
 });
 
 app.use(employeeRouter);
+app.use(userRouter);
+
 
 app.listen(8081, () => { console.log('Server is running...') });

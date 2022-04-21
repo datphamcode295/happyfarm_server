@@ -37,16 +37,16 @@ const UserSchema = new mongoose.Schema({
     userid: {
         type: String
     },
-    upperboundtemp: {
-        type: Number
-    },
     lowerboundtemp: {
         type: Number
     },
-    upperboundhumid: {
+    upperboundtemp: {
         type: Number
     },
     lowerboundhumid: {
+        type: Number
+    },
+    upperboundhumid: {
         type: Number
     },
     routine1:[Routine1Schema],
@@ -71,13 +71,13 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.pre('save', (next) => {
   console.log("Before Save")
-  let now = Date.now()
+  // let now = Date.now()
    
-  this.updatedat = now
-  // Set a value for createdAt only if it is null
-  if (!this.created) {
-    this.created = now
-  }
+  // this.updatedat = now
+  // // Set a value for createdAt only if it is null
+  // if (!this.created) {
+  //   this.created = now
+  // }
   
   // Call the next function in the pre-save chain
   next()
@@ -85,9 +85,9 @@ UserSchema.pre('save', (next) => {
 
 UserSchema.pre('findOneAndUpdate', (next) => {
   console.log("Before findOneAndUpdate")
-  let now = Date.now()
-  this.updatedat = now
-  console.log(this.updatedat)
+  // let now = Date.now()
+  // this.updatedat = now
+  // console.log(this.updatedat)
   next()
 });
 
@@ -108,5 +108,5 @@ UserSchema.post('remove', (doc) => {
   console.log('%s has been removed', doc._id);
 });
 
-const Employee = mongoose.model("Employee", UserSchema);
-module.exports = Employee;
+const User = mongoose.model("User", UserSchema);
+module.exports = User;
