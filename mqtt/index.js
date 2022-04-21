@@ -13,6 +13,8 @@ async function sub(){
         connectTimeout: 4000,
         username: 'vandat2000', //username in adafruit io key (My Key)
         password: '',//active key in adafruit io key (My Key)
+        //aio_conp99C0D
+        //s3V1IAZnOTOgQ8eZ8Df
         reconnectPeriod: 1000,
       })
       

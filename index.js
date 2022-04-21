@@ -8,8 +8,8 @@ const mqtt = require('./mqtt/index.js')
 const app = express();
 app.use(express.json()); // Make sure it comes back as json
 
-//TODO - Replace you Connection String here
-mongoose.connect('mongodb+srv://datbk:123456789dat@cluster0.punaw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+//TODO - Replace you Connection String here // datbk:123456789dat
+mongoose.connect('mongodb+srv:// @cluster0.punaw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(success => {
