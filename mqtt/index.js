@@ -8,7 +8,8 @@ const userModel = require('../models/User')
 async function sub(userid,adaUsername, adaPassword,lowerboundtemp, upperboundtemp,lowerboundhumid,upperboundhumid ){//userid
   const connectUrl = `https://io.adafruit.com:1883`
   const clientID = `subcriber12` //random but unique
-  const topic = adaUsername + '/feeds/temp'//fill your topic link
+  const topic1 = adaUsername + '/feeds/temp'//fill your topic link
+  const topic2 = adaUsername + '/feeds/humid'
 
 
   //watch mongodb to update constraint
@@ -45,30 +46,34 @@ async function sub(userid,adaUsername, adaPassword,lowerboundtemp, upperboundtem
     reconnectPeriod: 1000,
   })
     
-  //subscribe to the topic
+
+
   client.on('connect', () => {
-    console.log('Connected')
-    client.subscribe([topic], () => {
-      console.log(`Subscribe to topic '${topic}'`)
+    console.log('Connected client 2 ', userid)
+    client.subscribe([topic1], () => {
+      console.log(`Subscribe to topic '${topic1}'`)
       //TRIGGER WHWN NEW VALUE COME
-      client.on('message', (topic, payload) => {
-        console.log('Received Message:', topic, payload.toString(), 'lower humid : ', lowerboundhumid)
-        if(payload > 35){
-          console.log("so qua")
-          let val = 30;
-          client.publish(topic, val.toString(), { qos: 0, retain: false }, (error) => {
-            if (error) {
-              console.error(error)  
-            }
-            else{
-              console.log("Done: ", val)
-      
-            }
-          })
-        }
+      client.subscribe([topic2], () => {
+        console.log(`Subscribe to topic '${topic2}'`)
+        //TRIGGER WHWN NEW VALUE COME
+        client.on('message', (topic, payload) => {
+          console.log('Received Message:', topic, payload.toString(), 'lower humid : ', lowerboundhumid)
+          if(payload > 35){
+            console.log("so qua")
+            let val = 30;
+            client.publish(topic, val.toString(), { qos: 0, retain: false }, (error) => {
+              if (error) {
+                console.error(error)  
+              }
+              else{
+                console.log("Done: ", val)
+        
+              }
+            })
+          }
+        })
       })
     })
-  
   })
 }
 

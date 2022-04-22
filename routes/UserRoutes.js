@@ -41,7 +41,7 @@ app.get('/user', async (req, res) => {
     	"lowerboundhumid":"23",
     	"upperboundhumid":"24",
         "adaUsername":"vandat2000",
-        "adaPassword":"aio_conp99C0Ds3V1IAZnOTOgQ8eZ8Df",
+        "adaPassword":"aio_c",
     	"routine1":[
       		{
       			"starttime":"332443243",
