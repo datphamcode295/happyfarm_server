@@ -35,19 +35,25 @@ const HistorySchema = new mongoose.Schema({
 
 const UserSchema = new mongoose.Schema({
     userid: {
-        type: String
+      type: String
     },
     lowerboundtemp: {
-        type: Number
+      type: Number
     },
     upperboundtemp: {
-        type: Number
+      type: Number
     },
     lowerboundhumid: {
-        type: Number
+      type: Number
     },
     upperboundhumid: {
-        type: Number
+      type: Number
+    },
+    adaUsername:{
+      type: String
+    },
+    adaPassword: {
+      type: String
     },
     routine1:[Routine1Schema],
     routine2:[Routine2Schema],

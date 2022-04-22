@@ -1,12 +1,13 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const employeeRouter = require('./routes/EmployeeRoutes.js');
-const userRouter = require('./routes/UserRoutes.js');
-const mqtt = require('./mqtt/index.js');
-const dotenv = require('dotenv').config();
+const express = require('express')
+const mongoose = require('mongoose')
+const employeeRouter = require('./routes/EmployeeRoutes.js')
+const userRouter = require('./routes/UserRoutes.js')
+const mqtt = require('./mqtt/index.js')
+const dotenv = require('dotenv').config()
+const userModel = require('./models/User')
 
-const app = express();
-app.use(express.json()); // Make sure it comes back as json
+const app = express()
+app.use(express.json()) // Make sure it comes back as json
 
 //TODO - Replace you Connection String here
 mongoose.connect(dotenv.parsed.MONGODBLINK, {
@@ -17,15 +18,23 @@ mongoose.connect(dotenv.parsed.MONGODBLINK, {
 }).catch(err => {
   console.log('Error Mongodb connection')
 });
-console.log(dotenv.parsed)
 
-mqtt.sub();
+
+// mqtt.sub();
+mqtt.suball()
+
+
+// const user = userModel.watch([],  { fullDocument : "updateLookup" }).on('change', change => {
+//   // console.log(change.fullDocument.userid)
+//   console.log(change.updateDescription.updatedFields.lowerboundhumid!= undefined)
+//   // res.send(change);
+// });
   
 
 
 
-app.use(employeeRouter);
-app.use(userRouter);
+app.use(employeeRouter)
+app.use(userRouter) 
 
 
 

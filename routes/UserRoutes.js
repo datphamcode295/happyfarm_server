@@ -17,7 +17,7 @@ app.get('/users', async (req, res) => {
 //read by userid
 // http://localhost:8081/user?userid=13234324
 app.get('/user', async (req, res) => {
-    const user = await userModel.findOne({userid: req.query.userid}).select("lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history");
+    const user = await userModel.findOne({userid: req.query.userid}).select("lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid adaUsername adaPassword routine1 routine2 history");
   
     try {
         // const newuser = JSON.parse(user);
@@ -29,24 +29,29 @@ app.get('/user', async (req, res) => {
     }
   });
 
+
+
 //create new collection
 /*http://localhost:8081/user
-  {
-      "userid":"65634",
-	    "lowerboundtemp":"125",
-    	"upperboundtemp":"320",
-    	"lowerboundhumid":"135",
-    	"upperboundhumid":"340",
+  
+{
+      "userid":"11111",
+	    "lowerboundtemp":"13",
+    	"upperboundtemp":"22",
+    	"lowerboundhumid":"23",
+    	"upperboundhumid":"24",
+        "adaUsername":"vandat2000",
+        "adaPassword":"aio_conp99C0Ds3V1IAZnOTOgQ8eZ8Df",
     	"routine1":[
       		{
-      			"starttime":"143243243243",
-      			"endtime":"193434432334",
+      			"starttime":"332443243",
+      			"endtime":"2243443322334",
       			"divice":"fan"
       		}
     	],
     	"routine2":[
       		{
-      			"time":"1343532342",
+      			"time":"13433532342",
       			"divece":"fan",
       			"status": "1" 
       		}
@@ -54,7 +59,7 @@ app.get('/user', async (req, res) => {
       "history":[
       		{
       			"time":"15234324324",
-      			"notification": "qua nhiet"
+      			"notification": "hông ẩm gì hết trơn á"
       		}
       ]
   }
