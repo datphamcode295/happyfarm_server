@@ -4,6 +4,7 @@ import userRouter from './routes/UserRoutes.js'
 import suball from './running/mqtt.js'
 import dotenv from 'dotenv'
 import userModel from './models/User.js'
+import routineRouter from './routes/RoutineRoutes.js'
 import cron from './running/cron.js'
 
 const app = express()
@@ -38,6 +39,7 @@ cron();
 
 // app.use(employeeRouter)
 app.use(userRouter) 
+app.use(routineRouter) 
 
 
 
