@@ -1,15 +1,17 @@
 import Cron from 'cron'
 import fetch from "node-fetch"
 import routineModel from '../models/Routine.js'
+import dotenv from 'dotenv'
 
 const CronJob = Cron.CronJob
-
+const dotenvv = dotenv.config()
 
 function cron(){
     let username = "vandat2000";
-    let key = "aio_BeAO44q4M1PgbsmqsDVExuVVdeKU"
+    let key = dotenvv.parsed.ADAFRUIT_PASSWORD
     const userid = '22222'
     let jobArray = []
+    let idArray = []
     fetch(`http://localhost:8081/routine/${userid}`)
         .then(res=>res.json())
         .then(res=>{
@@ -24,8 +26,10 @@ function cron(){
             console.log(time)
 
             const job = new CronJob(time, function() {
+                // chua xu li khi request qua han
+                // chua xu li delete khi hoan thanh request
                 
-                console.log('Cron ',i,'running...', time)
+                console.log('Cron ',i,'running...', time, res[i].device)
                 fetch(`https://io.adafruit.com/api/v2/${username}/feeds/${res[i].device}/data?X-AIO-Key=${key}`, {
                 method: 'POST',
                 headers: {
@@ -34,25 +38,78 @@ function cron(){
                 },
                 body: JSON.stringify({datum:{value:res[i].status}})
                 })
-                .then(res=>res.json())
-                .then(res=>{
+                .then(res1=>res1.json())
+                .then(finalres=>{
                     // console.log(res)
                     job.stop()
+                    const id = res[i]._id
+                    jobArray.splice(idArray.findIndex(e=>e==id),1)
+                    idArray.splice(idArray.findIndex(e=>e==id),1)
+                    console.log(idArray)
+                    console.log(jobArray)
+
                 })
                 .catch(error => {
                     throw(error);
                 })
-                
-                
-                
-            
             })
+            jobArray.push(job)
+            idArray.push(res[i]._id)
+            console.log(idArray)
+            console.log(jobArray)
             job.start()
         }
     })
     .catch(error => {
         throw(error);
     })
+
+    routineModel.watch([],{ fullDocument : "updateLookup" }).on('change', change =>{
+        // let stringid = change.fullDocument._id
+        // a.push(change.documentKey.match(/\".*\"/g)[0].replaceAll('"',''))
+        // console.log(stringid.toString())
+        //         console.log(change)
+        
+                if(change.operationType == 'insert'){
+                    const x = new Date(change.fullDocument.time)
+            
+                    let time = x.getSeconds() + " " + x.getMinutes() + " " + x.getHours() + " " + x.getDate() + " " + x.getMonth() + " *"
+                    console.log(time)
+                    const job = new CronJob(time, function() {
+                        // chua xu li khi request qua han
+                        // chua xu li delete khi hoan thanh request
+                        
+                        console.log('Cron ','running...', time, change.fullDocument.device)
+                        fetch(`https://io.adafruit.com/api/v2/${username}/feeds/${change.fullDocument.device}/data?X-AIO-Key=${key}`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({datum:{value:change.fullDocument.status}})
+                        })
+                        .then(res1=>res1.json())
+                        .then(finalres=>{
+                            // console.log(res)
+                            job.stop()
+                            const id = change.fullDocument._id.toString()
+                            jobArray.splice(idArray.findIndex(e=>e==id),1)
+                            idArray.splice(idArray.findIndex(e=>e==id),1)
+                            console.log(idArray)
+                            console.log(jobArray)
+        
+                        })
+                        .catch(error => {
+                            throw(error);
+                        })
+                        })
+                        jobArray.push(job)
+                        idArray.push(change.fullDocument._id.toString())
+                        console.log(idArray)
+                        console.log(jobArray)
+                        job.start()
+                }
+        })
 
     
 
@@ -115,14 +172,7 @@ function cron(){
 //         job2.start()
 //         // console.log(typeof(job.start))
 //         // job()*/
-//     routineModel.watch([],{ fullDocument : "updateLookup" }).on('change', change =>{
-//         console.log(change)
-//         if(change.fullDocument.device == "light")
-//             {
-//                 console.log("vo ne")
-//                 jobArray[0].stop()
-//             }
-// })
+ 
 
 }
 
