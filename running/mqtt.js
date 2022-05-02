@@ -1,6 +1,5 @@
-const mqtt = require('mqtt')
-const dotenv = require('dotenv').config()
-const userModel = require('../models/User')
+import mqtt from 'mqtt'
+import userModel from '../models/User.js'
 
 
 
@@ -80,16 +79,17 @@ async function sub(userid,adaUsername, adaPassword,lowerboundtemp, upperboundtem
 async function suball(){
   const users =  await userModel.find({});
   let arrusers = []
-  for(user of users){
+  for(let user of users){
     arrusers.push(user.userid)
     sub(user.userid, user.adaUsername, user.adaPassword, user.lowerboundtemp, user.upperboundtemp, user.lowerboundhumid, user.upperboundhumid )
   }
   console.log(arrusers)
-  return arrusers
+  return arrusers 
 }
 
 
 
 
-module.exports =  {sub,suball}
+// module.exports =  {sub,suball}
+export default suball
 

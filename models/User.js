@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 const Routine1Schema = new mongoose.Schema({
     starttime: {
@@ -114,5 +114,6 @@ UserSchema.post('remove', (doc) => {
   console.log('%s has been removed', doc._id);
 });
 
-const User = mongoose.model("User", UserSchema);
-module.exports = User;
+const userModel = mongoose.model("User", UserSchema);
+// module.exports = User;
+export default userModel

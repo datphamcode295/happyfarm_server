@@ -1,6 +1,7 @@
-const express = require('express');
-const userModel = require('../models/User');
-const app = express();
+import express from 'express'
+import userModel from '../models/User.js'
+
+const app = express()
 
 //Read ALL
 //http://localhost:8081/users
@@ -234,4 +235,4 @@ app.get('/user/routine2/:userid', async (req, res) => {
     res.status(500).send(err)
   }
 });
-module.exports = app
+export default app

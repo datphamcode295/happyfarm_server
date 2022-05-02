@@ -1,5 +1,5 @@
-const express = require('express');
-const userModel = require('../models/User');
+import express from 'express'
+import userModel from '../models/User'
 const app = express();
 
 //Read ALL
@@ -227,7 +227,7 @@ app.get('/User/delete', async (req, res) => {
     res.status(500).send(err)
   }
 })
-module.exports = app
+export default app
 
 //Insert Multiple Records
 /*

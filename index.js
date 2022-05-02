@@ -1,16 +1,17 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const employeeRouter = require('./routes/EmployeeRoutes.js')
-const userRouter = require('./routes/UserRoutes.js')
-const mqtt = require('./mqtt/index.js')
-const dotenv = require('dotenv').config()
-const userModel = require('./models/User')
+import express from 'express'
+import mongoose from 'mongoose'
+import userRouter from './routes/UserRoutes.js'
+import suball from './running/mqtt.js'
+import dotenv from 'dotenv'
+import userModel from './models/User.js'
+import cron from './running/cron.js'
 
 const app = express()
+let dotenvv = dotenv.config()
 app.use(express.json()) // Make sure it comes back as json
 
 //TODO - Replace you Connection String here
-mongoose.connect(dotenv.parsed.MONGODBLINK, {
+mongoose.connect(dotenvv.parsed.MONGODBLINK, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(success => {
@@ -21,7 +22,9 @@ mongoose.connect(dotenv.parsed.MONGODBLINK, {
 
 
 // mqtt.sub();
-mqtt.suball()
+suball()
+
+cron();
 
 
 // const user = userModel.watch([],  { fullDocument : "updateLookup" }).on('change', change => {
@@ -33,7 +36,7 @@ mqtt.suball()
 
 
 
-app.use(employeeRouter)
+// app.use(employeeRouter)
 app.use(userRouter) 
 
 

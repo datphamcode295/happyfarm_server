@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
+
 
 const EmployeeSchema = new mongoose.Schema({
   firstname: {
@@ -83,5 +84,6 @@ EmployeeSchema.post('remove', (doc) => {
   console.log('%s has been removed', doc._id);
 });
 
-const Employee = mongoose.model("Employee", EmployeeSchema);
-module.exports = Employee;
+const employeeModel = mongoose.model("Employee", EmployeeSchema);
+// module.exports = Employee;
+export default employeeModel

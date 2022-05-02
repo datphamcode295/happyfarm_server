@@ -1,5 +1,6 @@
-const express = require('express');
-const employeeModel = require('../models/Employee');
+import express from 'express'
+import employeeModel from '../models/Employee.js'
+
 const app = express();
 
 //Read ALL
@@ -227,7 +228,8 @@ app.get('/employee/delete', async (req, res) => {
     res.status(500).send(err)
   }
 })
-module.exports = app
+// module.exports = app
+export {app as employeeRouter}
 
 //Insert Multiple Records
 /*
