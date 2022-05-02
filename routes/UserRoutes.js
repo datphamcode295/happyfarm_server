@@ -109,8 +109,129 @@ app.get('/user', async (req, res) => {
     }
   });
 
+//add Routine1
+/*
+  http://localhost:8081/user/routine1/22222
+  {
+      "starttime":"15234324324",
+      "endtime": "22434432334",
+      "divice": "pump"
+  }
+*/
+  app.patch('/user/routine1/:userid', async (req, res) => {
+      
+    try{
+        let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history");
+        let oldarray = olduser.routine1;
+        let newarray = new Array(req.body);
+
+        Array.prototype.push.apply(newarray,oldarray);
+        olduser.routine1 = newarray;
+        const user = new userModel(olduser);
+        const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true})
+        res.send(response)
+        
+    }catch (err){
+        res.status(500).send(err);
+    }
+  });
 
 
+//delete routine1
+/*http://localhost:8081/user/routine1/22222
+{
+    "starttime": 15234324324,
+    "endtime": 22434432334,
+    "divice": "pump"
 
+}
+*/
+  app.get('/user/routine1/:userid', async (req, res) => {
+    try {
+      let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history");
+      let oldarray = olduser.routine1;
+      let deleteo = req.body;
+      // console.log(deleteo);
+      const index = oldarray.findIndex( a =>  a.starttime === deleteo.starttime && 
+                                            a.endtime === deleteo.endtime &&
+                                            a.divice === deleteo.divice);
+      console.log(index);
+      if(index > -1){
+        olduser.routine1 = oldarray.filter((e) => e.starttime !== deleteo.starttime && 
+                                                  e.endtime !== deleteo.endtime &&
+                                                  e.divice !== deleteo.divice);
+        const user = new userModel(olduser);
+        const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true});
+        res.status(200).send(JSON.stringify({status: true, message:"Routine1 Deleted Successfully"}))
+      }
+      else{
+        res.status(404).send(JSON.stringify({status: false, message:"No Routine1 found"}))
+      }
+    
+    } catch (err) {
+      res.status(500).send(err)
+    }
+  });
 
+// add Routine2
+/*  http://localhost:8081/user/routine2/22222
+  {
+      "time": "15234324324",
+      "divice":"pump",
+      "status":"0"
+  }
+*/
+app.patch('/user/routine2/:userid', async (req, res) => {
+      
+  try{
+      let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history");
+      let oldarray = olduser.routine2;
+      let newarray = new Array(req.body);
+
+      Array.prototype.push.apply(newarray,oldarray);
+      olduser.routine2 = newarray;
+      const user = new userModel(olduser);
+      const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true})
+      res.send(response)
+      
+  }catch (err){
+      res.status(500).send(err);
+  }
+});
+
+//delete routine2
+/*http://localhost:8081/user/routine2/22222
+{
+    "time": 15234324324,
+    "divice":"pump",
+    "status":"0"
+
+}
+*/
+app.get('/user/routine2/:userid', async (req, res) => {
+  try {
+    let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history");
+    let oldarray = olduser.routine2;
+    let deleteo = req.body;
+    // console.log(deleteo);
+    const index = oldarray.findIndex( a =>  a.time === deleteo.time && 
+                                            a.divice === deleteo.divice &&
+                                            a.status === deleteo.status);
+    console.log(index);
+    if(index > -1){
+      olduser.routine2 = oldarray.filter((e) => e.time !== deleteo.time && 
+                                                e.divice !== deleteo.divice &&
+                                                e.status !== deleteo.status);
+      const user = new userModel(olduser);
+      const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true});
+      res.status(200).send(JSON.stringify({status: true, message:"Routine2 Deleted Successfully"}))
+    }
+    else{
+      res.status(404).send(JSON.stringify({status: false, message:"No Routine2 found"}))
+    }
+  
+  } catch (err) {
+    res.status(500).send(err)
+  }
+});
 module.exports = app
