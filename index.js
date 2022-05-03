@@ -5,7 +5,7 @@ import suball from './running/mqtt.js'
 import dotenv from 'dotenv'
 import userModel from './models/User.js'
 import routineRouter from './routes/RoutineRoutes.js'
-import cron from './running/cron.js'
+import mulCron from './running/cron.js'
 
 const app = express()
 let dotenvv = dotenv.config()
@@ -25,7 +25,7 @@ mongoose.connect(dotenvv.parsed.MONGODBLINK, {
 // mqtt.sub();
 suball()
 
-cron();
+mulCron();
 
 
 // const user = userModel.watch([],  { fullDocument : "updateLookup" }).on('change', change => {

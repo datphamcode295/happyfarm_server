@@ -1,15 +1,21 @@
 import Cron from 'cron'
 import fetch from "node-fetch"
 import routineModel from '../models/Routine.js'
+import userModel from '../models/User.js'
 import dotenv from 'dotenv'
 
 const CronJob = Cron.CronJob
 const dotenvv = dotenv.config()
 
-function cron(){
-    let username = "vandat2000";
-    let key = dotenvv.parsed.ADAFRUIT_PASSWORD
-    const userid = '22222'
+function deleteRoutine(id){
+    fetch(`http://localhost:8081/routine/${id}`, {
+                        method: 'DELETE'
+                        })
+                        .then(res1=>res1.json())
+                        .then(console.log)
+}
+
+function cron(username, key, userid){
     let jobArray = []
     let idArray = []
     fetch(`http://localhost:8081/routine/${userid}`)
@@ -27,7 +33,7 @@ function cron(){
 
             const job = new CronJob(time, function() {
                 // chua xu li khi request qua han
-                // chua xu li delete khi hoan thanh request
+              
                 
                 console.log('Cron ',i,'running...', time, res[i].device)
                 fetch(`https://io.adafruit.com/api/v2/${username}/feeds/${res[i].device}/data?X-AIO-Key=${key}`, {
@@ -40,11 +46,12 @@ function cron(){
                 })
                 .then(res1=>res1.json())
                 .then(finalres=>{
-                    // console.log(res)
+       
                     job.stop()
                     const id = res[i]._id
                     jobArray.splice(idArray.findIndex(e=>e==id),1)
                     idArray.splice(idArray.findIndex(e=>e==id),1)
+                    deleteRoutine(id)
                     console.log(idArray)
                     console.log(jobArray)
 
@@ -68,9 +75,8 @@ function cron(){
         // let stringid = change.fullDocument._id
         // a.push(change.documentKey.match(/\".*\"/g)[0].replaceAll('"',''))
         // console.log(stringid.toString())
-        //         console.log(change)
-        
-                if(change.operationType == 'insert'){
+            
+                if(change.operationType == 'insert' && change.fullDocument.userid == userid){
                     const x = new Date(change.fullDocument.time)
             
                     let time = x.getSeconds() + " " + x.getMinutes() + " " + x.getHours() + " " + x.getDate() + " " + x.getMonth() + " *"
@@ -79,7 +85,7 @@ function cron(){
                         // chua xu li khi request qua han
                         // chua xu li delete khi hoan thanh request
                         
-                        console.log('Cron ','running...', time, change.fullDocument.device)
+                        console.log('Cron insert ','running...', time, change.fullDocument.device)
                         fetch(`https://io.adafruit.com/api/v2/${username}/feeds/${change.fullDocument.device}/data?X-AIO-Key=${key}`, {
                         method: 'POST',
                         headers: {
@@ -95,6 +101,7 @@ function cron(){
                             const id = change.fullDocument._id.toString()
                             jobArray.splice(idArray.findIndex(e=>e==id),1)
                             idArray.splice(idArray.findIndex(e=>e==id),1)
+                            deleteRoutine(id)
                             console.log(idArray)
                             console.log(jobArray)
         
@@ -108,73 +115,34 @@ function cron(){
                         console.log(idArray)
                         console.log(jobArray)
                         job.start()
+                }else if(change.operationType=='delete'){
+                    const id = change.documentKey._id.toString()
+
+                    if(jobArray[idArray.findIndex(e=>e==id)]){
+                        jobArray[idArray.findIndex(e=>e==id)].stop()
+                        jobArray.splice(idArray.findIndex(e=>e==id),1)
+                        idArray.splice(idArray.findIndex(e=>e==id),1)
+                        console.log(idArray)
+                        console.log(jobArray)
+                    }
                 }
+            
+                
         })
 
-    
 
-
-//     const time1 = "* * * " +"* * *"
-//     const time2 = '* * * * * *'
-//     const time = []
-//     const device=['pump', 'light']
-//     time.push(time1)
-//     time.push(time2)
-//     for(let i =0; i<time.length;i++){
-//         const job = new CronJob(time[i], function() {
-//             // fetch(`https://io.adafruit.com/api/v2/${username}/feeds/fan/data?X-AIO-Key=${key}`, {
-//             // method: 'POST',
-//             // headers: {
-//             //     'Accept': 'application/json',
-//             //     'Content-Type': 'application/json'
-//             // },
-//             // body: JSON.stringify({datum:{value:"ON"}})
-//             // }).then(res=>res.json())
-//             // .then(console.log);
-//             console.log('Cron '+i+' here...',Math.random())
-//             // jobArray.splice(jobArray.findIndex(e=>e===job),1)
-//             // console.log(jobArray)
-//             // job.stop()
-//         })
-//         jobArray.push(job)
-//         }
-
-//         for(let i=0;i<jobArray.length;i++){
-//             jobArray[i].start()
-//         }
-
-//         /*
-//         const job2 = new CronJob(, function(){
-//             console.log('Cron2 here...',Math.random())
-
-//         })
-//         jobArray.push(job2)
-//         const job = new CronJob(time, function() {
-//             // fetch(`https://io.adafruit.com/api/v2/${username}/feeds/fan/data?X-AIO-Key=${key}`, {
-//             // method: 'POST',
-//             // headers: {
-//             //     'Accept': 'application/json',
-//             //     'Content-Type': 'application/json'
-//             // },
-//             // body: JSON.stringify({datum:{value:"ON"}})
-//             // }).then(res=>res.json())
-//             // .then(console.log);
-//             console.log('Cron1 here...',Math.random())
-//             jobArray.splice(jobArray.findIndex(e=>e===job),1)
-//             console.log(jobArray)
-//             job.stop()
-//         })
-        
-//         jobArray.push(job)
-//         console.log('Cron running...',Date())
-//         // Use this if the 4th param is default value(false)
-//         job.start()
-//         job2.start()
-//         // console.log(typeof(job.start))
-//         // job()*/
  
 
 }
 
-// module.exports =  {cron}
-export default cron
+async function mulCron(){
+    const users =  await userModel.find({});
+    for(let user of users){
+
+      cron(user.adaUsername, user.adaPassword, user.userid)
+    }
+
+  }
+
+
+export default mulCron
