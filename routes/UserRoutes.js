@@ -110,24 +110,17 @@ app.get('/user', async (req, res) => {
     }
   })
 
-//add Routine1
-/*
-  http://localhost:8081/user/routine1/22222
-  {
-      "starttime":"15234324324",
-      "endtime": "22434432334",
-      "divice": "pump"
-  }
-*/
-  app.patch('/user/routine1/:userid', async (req, res) => {
-      
+  // http://localhost:8081/user/lowertemp/M1Apv3xeMsWWirqfUJ01GheeT142
+  // {
+  //   "value":"10"
+  // }
+
+  app.patch('/user/lowertemp/:userid', async (req, res) => {
+    
     try{
         let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history")
-        let oldarray = olduser.routine1
-        let newarray = new Array(req.body)
-
-        Array.prototype.push.apply(newarray,oldarray)
-        olduser.routine1 = newarray
+        let newvalue = req.body.value
+        olduser.lowerboundtemp = newvalue
         const user = new userModel(olduser)
         const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true})
         res.send(response)
@@ -137,75 +130,70 @@ app.get('/user', async (req, res) => {
     }
   })
 
-//delete routine1
-// patch 
-// http://localhost:8081/user/routine1/22222/626fbb4becf06f0eb923a807
+    // http://localhost:8081/user/uppertemp/M1Apv3xeMsWWirqfUJ01GheeT142
+  // {
+  //   "value":"10"
+  // }
 
-app.patch('/user/routine1/:userid/:id', async (req, res) => {
-      
-  try{
-      let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history")
-      let newarray = olduser.routine1
-      newarray.splice(newarray.findIndex(e=>e._id==req.params.id),1)
+  app.patch('/user/uppertemp/:userid', async (req, res) => {
+    
+    try{
+        let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history")
+        let newvalue = req.body.value
+        olduser.upperboundtemp = newvalue
+        const user = new userModel(olduser)
+        const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true})
+        res.send(response)
+        
+    }catch (err){
+        res.status(500).send(err)
+    }
+  })
 
-      
-      olduser.routine1 = newarray
-      const user = new userModel(olduser)
-      const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true})
-      res.send(response)
-      
-  }catch (err){
-      res.status(500).send(err)
-  }
-})
+    // http://localhost:8081/user/lowerhumid/M1Apv3xeMsWWirqfUJ01GheeT142
+  // {
+  //   "value":"10"
+  // }
 
-// add Routine2
-/*  http://localhost:8081/user/routine2/22222
-  {
-      "time": "15234324324",
-      "divice":"pump",
-      "status":"0"
-  }
-*/
-app.patch('/user/routine2/:userid', async (req, res) => {
-      
-  try{
-      let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history")
-      let oldarray = olduser.routine2
-      let newarray = new Array(req.body)
+  app.patch('/user/lowerhumid/:userid', async (req, res) => {
+    
+    try{
+        let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history")
+        let newvalue = req.body.value
+        olduser.lowerboundhumid = newvalue
+        const user = new userModel(olduser)
+        const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true})
+        res.send(response)
+        
+    }catch (err){
+        res.status(500).send(err)
+    }
+  })
 
-      Array.prototype.push.apply(newarray,oldarray)
-      olduser.routine2 = newarray
-      const user = new userModel(olduser)
-      const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true})
-      res.send(response)
-      
-  }catch (err){
-      res.status(500).send(err)
-  }
-})
+    // http://localhost:8081/user/upperhumid/M1Apv3xeMsWWirqfUJ01GheeT142
+  // {
+  //   "value":"10"
+  // }
 
-//delete routine2
-// patch 
-// http://localhost:8081/user/routine2/22222/626fbb4becf06f0eb923a807
+  app.patch('/user/upperhumid/:userid', async (req, res) => {
+    
+    try{
+        let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history")
+        let newvalue = req.body.value
+        olduser.upperboundhumid = newvalue
+        const user = new userModel(olduser)
+        const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true})
+        res.send(response)
+        
+    }catch (err){
+        res.status(500).send(err)
+    }
+  })
 
-app.patch('/user/routine2/:userid/:id', async (req, res) => {
-      
-  try{
-      let olduser = await userModel.findOne({userid: req.params.userid}).select("userid lowerboundtemp upperboundtemp lowerboundhumid upperboundhumid routine1 routine2 history")
-      let newarray = olduser.routine2
-      newarray.splice(newarray.findIndex(e=>e._id==req.params.id),1)
 
-      
-      olduser.routine2 = newarray
-      const user = new userModel(olduser)
-      const response =  await userModel.findOneAndUpdate({ userid: req.params.userid}, user, {new: true})
-      res.send(response)
-      
-  }catch (err){
-      res.status(500).send(err)
-  }
-})
+
+
+  
 
 
 export default app
