@@ -50,7 +50,45 @@
     "time":"15234324324",
     "notification": "nóng quá trời nè"
   }
- ```
+```
+
+### Update lower bound temp
+&emsp; http://localhost:8081/user/lowertemp/:userid
+
+```
+{
+    "value":"10"
+}
+```
+
+### Update upper bound temp
+&emsp; http://localhost:8081/user/uppertemp/:userid
+
+```
+{
+    "value":"10"
+}
+```
+
+### Update lower bound humid
+&emsp; http://localhost:8081/user/lowerhumid/:userid
+
+```
+{
+    "value":"10"
+}
+```
+
+### Update upper bound humid
+&emsp; http://localhost:8081/user/upperhumid/:userid
+
+```
+{
+    "value":"10"
+}
+```
+
+
 ## Routine
 
 ### Get all routines(Get)
@@ -73,6 +111,9 @@
 
 ### Delete routine(Delete)
 &emsp; http://localhost:8081/routine/:id
+
+##User interface github link
+https://github.com/datphamcode295/happyfarm.git
 
   
   
