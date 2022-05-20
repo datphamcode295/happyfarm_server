@@ -115,6 +115,8 @@
 ## User interface github link
 https://github.com/datphamcode295/happyfarm.git
 
+Note: add file .env: MONGODBLINK = 'mongodb+srv://datbk:123456789dat@cluster0.punaw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' before running
+
   
   
 
